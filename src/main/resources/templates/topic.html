@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">WebSiteName</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/topic">Topic</a></li>
+            <li><a href="#">Page 2</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <form action="/topic/save" method="post" th:object="${topic}">
+        <h2>Topic To be created</h2>
+        <p class="hint-text">Topic Creation</p>
+
+        <div class="form-group">
+            <div class="row">
+                <input type="hidden" name="id" th:value="${topic.id}">
+                <div class="col-xs-6"><input type="text" class="form-control" name="name" placeholder="Topic Name"
+                                             th:value="${topic.name}"
+                                             required="required">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-6"><select class="form-control" name="visibility"
+                                              th:value="${topic.visibility}"
+                                              required="required">
+                    <option value="PUBLIC">Public</option>
+                    <option value="PRIVATE">Private</option>
+                </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-6">
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Visibility</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tp:${topicList}">
+            <td th:text="${tp.name}"></td>
+            <td th:text="${tp.visibility}"></td>
+            <td><a th:href="@{/topic/edit/__${tp.id}__}">EDIT</a>
+                <a th:href="@{/topic/delete/__${tp.id}__}">Delete</a></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
