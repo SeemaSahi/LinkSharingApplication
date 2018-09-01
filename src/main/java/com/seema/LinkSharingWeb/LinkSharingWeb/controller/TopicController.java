@@ -3,12 +3,13 @@ package com.seema.LinkSharingWeb.LinkSharingWeb.controller;
 import com.seema.LinkSharingWeb.LinkSharingWeb.domain.Topic;
 import com.seema.LinkSharingWeb.LinkSharingWeb.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
-@RestController
+@Controller
 @RequestMapping("/topic")
 public class TopicController {
     @Autowired
@@ -41,7 +42,7 @@ public class TopicController {
     }
 
     @RequestMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable Long id, HttpSession httpSession) {
+    public ModelAndView delete(@PathVariable Long id, HttpSession httpSession) throws Exception{
         ModelAndView modelAndView = new ModelAndView("topic");
         topicService.delete(id, httpSession);
         modelAndView.addObject("topic", new Topic());

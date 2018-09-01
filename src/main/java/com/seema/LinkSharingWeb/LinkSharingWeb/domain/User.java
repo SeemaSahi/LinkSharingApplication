@@ -1,11 +1,11 @@
 package com.seema.LinkSharingWeb.LinkSharingWeb.domain;
 
-import org.hibernate.engine.internal.Cascade;
-
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -13,6 +13,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
+    @Email(message = "Please enter valid email")
     private String email;
     @Column(nullable = false, unique = true)
     private String userName;
@@ -27,6 +28,17 @@ public class User {
     private Date lastUpdated;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Topic> topics = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public List<Topic> getTopics() {
         return topics;

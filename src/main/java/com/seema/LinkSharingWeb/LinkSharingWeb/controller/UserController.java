@@ -4,13 +4,12 @@ import com.seema.LinkSharingWeb.LinkSharingWeb.domain.User;
 import com.seema.LinkSharingWeb.LinkSharingWeb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
@@ -18,10 +17,15 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login",method = RequestMethod.GET)
     public ModelAndView getLoginPage() {
         ModelAndView modelAndView = new ModelAndView("login");
         return modelAndView;
+    }
+
+    @GetMapping("/home")
+    public ModelAndView homePage() {
+        return new ModelAndView("home");
     }
 
     @RequestMapping("/loginCheck")
@@ -38,6 +42,7 @@ public class UserController {
             modelAndView = new ModelAndView("login");
 
         return modelAndView;
+        // return new ModelAndView("welcome", "firstName", userService.getClass() );
 
     }
 
@@ -50,10 +55,17 @@ public class UserController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ModelAndView save(@ModelAttribute User user) {
-        userService.save(user);
-        ModelAndView modelAndView = new ModelAndView("login");
-        return modelAndView;
+    public ModelAndView save(@ModelAttribute @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView("signup");
+            modelAndView.addObject("user", user);
+            return modelAndView;
+        } else {
+            userService.save(user);
+            ModelAndView modelAndView = new ModelAndView("login");
+            return modelAndView;
+
+        }
     }
 
     @RequestMapping("/logout")

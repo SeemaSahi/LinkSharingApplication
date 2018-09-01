@@ -2,6 +2,7 @@ package com.seema.LinkSharingWeb.LinkSharingWeb.service;
 
 import com.seema.LinkSharingWeb.LinkSharingWeb.domain.Topic;
 import com.seema.LinkSharingWeb.LinkSharingWeb.domain.User;
+import com.seema.LinkSharingWeb.LinkSharingWeb.exception.RecordNotFoundException;
 import com.seema.LinkSharingWeb.LinkSharingWeb.repository.TopicRepository;
 import com.seema.LinkSharingWeb.LinkSharingWeb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ public class TopicService {
             topic.setCreatedDate(new java.util.Date());
         }
         topic.setLastUpdateDate(new java.util.Date());
-
         User sessionUser = (User) httpSession.getAttribute("user");
         User dbUser = userRepository.findById(sessionUser.getId()).get();
         List<Topic> topicLIst = dbUser.getTopics();
@@ -45,13 +45,18 @@ public class TopicService {
         return topicRepository.findById(id).get();
     }
 
-    public void delete(Long id, HttpSession httpSession) {
+    public void delete(Long id, HttpSession httpSession) throws Exception {
         User sessionUser = (User) httpSession.getAttribute("user");
         User dbUser = userRepository.findById(sessionUser.getId()).get();
         List<Topic> topicLIst = dbUser.getTopics();
+
         topicLIst.removeIf(it -> it.getId() == id);
         dbUser.setTopics(topicLIst);
-        topicRepository.deleteById(id);
+        try {
+            topicRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RecordNotFoundException("Record not found in db with id" + id);
+        }
         userRepository.save(dbUser);
     }
 

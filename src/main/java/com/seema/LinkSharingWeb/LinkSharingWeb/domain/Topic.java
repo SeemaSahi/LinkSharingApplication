@@ -3,7 +3,9 @@ package com.seema.LinkSharingWeb.LinkSharingWeb.domain;
 import com.seema.LinkSharingWeb.LinkSharingWeb.util.Visibility;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Topic {
@@ -15,7 +17,10 @@ public class Topic {
     private Date createdby;
     private Date createdDate;
     @Enumerated(EnumType.STRING)
-    public Visibility visibility;
+    private Visibility visibility;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Resource> resources = new ArrayList<>();
 
     public Visibility getVisibility() {
         return visibility;
@@ -61,6 +66,14 @@ public class Topic {
 
     public Long getId() {
         return id;
+    }
+
+    public List<Resource> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
     }
 
     public void setId(Long id) {
