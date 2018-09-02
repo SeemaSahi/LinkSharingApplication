@@ -28,17 +28,6 @@ public class User {
     private Date lastUpdated;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Topic> topics = new ArrayList<>();
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 
     public List<Topic> getTopics() {
         return topics;
