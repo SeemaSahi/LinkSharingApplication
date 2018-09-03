@@ -11,6 +11,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
     @Column(nullable = false, unique = true)
     @Email(message = "Please enter valid email")
@@ -18,6 +19,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String userName;
     @Column(nullable = false)
+    @org.springframework.data.annotation.Transient
     private String password;
     @Column(nullable = false)
     private String firstName;
@@ -28,8 +30,9 @@ public class User {
     private Date lastUpdated;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Topic> topics = new ArrayList<>();
+
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public Set<Role> getRoles() {

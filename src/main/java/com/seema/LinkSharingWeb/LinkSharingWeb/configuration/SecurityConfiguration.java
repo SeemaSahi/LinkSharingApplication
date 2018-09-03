@@ -1,7 +1,6 @@
 package com.seema.LinkSharingWeb.LinkSharingWeb.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,15 +16,18 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Value(("${spring.queries.users-query}"))
-    private String usersQuery;
-    @Value("${spring.queries.roles-query}")
-    private String rolesQuery;
-    @Autowired
-    @Qualifier("dataSource")
-    private DataSource dataSource;
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Value("${spring.queries.users-query}")
+    private String usersQuery;
+
+    @Value("${spring.queries.roles-query}")
+    private String rolesQuery;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
@@ -37,18 +39,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder);
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.
+        http.headers().frameOptions().disable().and().
                 authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/user/login").permitAll()
+                .antMatchers("/**/*.ico").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/user/signup").permitAll()
                 .antMatchers("/user/save").permitAll()
-                .antMatchers("/user/**").hasAuthority("ADMIN").anyRequest()
-                .authenticated().and().csrf().disable().formLogin()
-                .loginPage("/login").failureUrl("/user/login?error=true")
+                .and().authorizeRequests().anyRequest().authenticated()
+                .and().csrf().disable().formLogin()
+                .loginPage("/login").failureUrl("/login?error=true")
                 .defaultSuccessUrl("/user/home")
                 .usernameParameter("email")
                 .passwordParameter("password")
@@ -62,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/fonts/**", "/bower_components/**");
     }
 
 }

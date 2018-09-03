@@ -40,7 +40,8 @@ public class UserService {
     }
 
     public User validateLogin(String email, String password) {
-        Optional<User> optionalUser = userRepository.findByEmailAndPassword(email, password);
+//        Optional<User> optionalUser = userRepository.findByEmailAndPassword(email, password);
+        Optional<User> optionalUser = null;
         if (optionalUser.isPresent()) {
             return optionalUser.get();
         } else

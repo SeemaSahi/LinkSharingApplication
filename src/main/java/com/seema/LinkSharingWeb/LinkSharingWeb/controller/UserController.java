@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/user")
 public class UserController {
     @Autowired
     UserService userService;
@@ -23,12 +22,12 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("/home")
+    @GetMapping("/user/home")
     public ModelAndView homePage() {
         return new ModelAndView("home");
     }
 
-    @RequestMapping("/loginCheck")
+    @RequestMapping("/user/loginCheck")
     public ModelAndView validate(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession httpSession) {
         ModelAndView modelAndView = null;
         if (email != null && password != null) {
@@ -46,7 +45,7 @@ public class UserController {
 
     }
 
-    @RequestMapping("/signup")
+    @RequestMapping("/user/signup")
     public ModelAndView getPage() {
         ModelAndView modelAndView = new ModelAndView("signup");
         modelAndView.addObject("user", new User());
@@ -54,7 +53,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/save", method = RequestMethod.POST)
     public ModelAndView save(@ModelAttribute @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView("signup");
